@@ -1,24 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import MobileApps from './pages/About';
+import Home from './pages/Home';
+import Category from './pages/Category';
+import Page404 from './containers/Page404';
+
+//REDUX
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
+//ROUTES
+let pages = [
+  { path: "/", component: <Home />, exact: true },
+  { path: "/page404", component: <Page404 /> },
+  { path: "/mobileapps", component: <MobileApps /> },
+  { path: "/:category", exact: true, component: <Category /> },
+  // { path: "/:category/:subcategory", component: <Category /> },
+  { component: <Redirect to="/" /> }
+]
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <Switch>
+          {pages.map((page, index) => {
+            return <Route path={page.path} exact={page.exact} key={page.path}>
+              {page.component}
+            </Route>
+          })}
+        </Switch>
+      </div>
+    </Provider>
+
   );
 }
 
